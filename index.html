@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Internet Black Box records connectivity problems and creates timestamped evidence reports you can share with your ISP."
+  />
+
+  <title>Bladi Moon Labs — Internet Black Box</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background: #070b14;
+      color: #f5f7fb;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1120px, 90%);
+      margin: 0 auto;
+    }
+
+    nav {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-size: 1.1rem;
+    }
+
+    .nav-note {
+      color: #8f9bad;
+      font-size: 0.9rem;
+    }
+
+    .hero {
+      min-height: 690px;
+
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 70px;
+      align-items: center;
+
+      padding: 90px 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 7px 12px;
+      border-radius: 999px;
+
+      background: rgba(94, 234, 212, 0.08);
+      border: 1px solid rgba(94, 234, 212, 0.22);
+
+      color: #79f3df;
+      font-size: 0.85rem;
+      font-weight: 700;
+
+      margin-bottom: 24px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #5eead4;
+      box-shadow: 0 0 14px #5eead4;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 6vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+
+      max-width: 780px;
+    }
+
+    .hero-highlight {
+      color: #5eead4;
+    }
+
+    .hero-copy {
+      margin-top: 28px;
+
+      color: #aab4c4;
+      font-size: 1.16rem;
+      max-width: 650px;
+    }
+
+    .actions {
+      margin-top: 36px;
+
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      padding: 13px 20px;
+      border-radius: 10px;
+
+      font-weight: 750;
+      font-size: 0.96rem;
+
+      transition: 0.2s ease;
+    }
+
+    .button-primary {
+      background: #f5f7fb;
+      color: #070b14;
+    }
+
+    .button-primary:hover {
+      transform: translateY(-2px);
+      background: #ffffff;
+    }
+
+    .button-secondary {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd3df;
+    }
+
+    .button-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .product-card {
+      padding: 26px;
+
+      border-radius: 22px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.055),
+          rgba(255, 255, 255, 0.02)
+        );
+
+      border: 1px solid rgba(255, 255, 255, 0.09);
+
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    .window-top {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 28px;
+    }
+
+    .circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #3a4351;
+    }
+
+    .monitor-label {
+      color: #7f8b9d;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.13em;
+      font-weight: 800;
+    }
+
+    .status {
+      margin-top: 6px;
+
+      font-size: 2.25rem;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+
+      color: #5eead4;
+    }
+
+    .stats {
+      margin-top: 26px;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 15px;
+
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .stat-name {
+      color: #758195;
+      font-size: 0.78rem;
+    }
+
+    .stat-value {
+      margin-top: 3px;
+      font-size: 1.15rem;
+      font-weight: 750;
+    }
+
+    .event {
+      margin-top: 18px;
+
+      padding: 15px;
+
+      border-radius: 12px;
+
+      background: rgba(251, 191, 36, 0.07);
+      border: 1px solid rgba(251, 191, 36, 0.15);
+
+      color: #e7c773;
+      font-size: 0.9rem;
+    }
+
+    section {
+      padding: 100px 0;
+    }
+
+    .section-label {
+      color: #5eead4;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-top: 10px;
+
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      letter-spacing: -0.045em;
+      line-height: 1.08;
+    }
+
+    .section-description {
+      margin-top: 18px;
+      color: #929daf;
+      max-width: 720px;
+      font-size: 1.06rem;
+    }
+
+    .steps {
+      margin-top: 48px;
+
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .step {
+      padding: 26px;
+
+      border-radius: 16px;
+
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.075);
+    }
+
+    .step-number {
+      color: #5eead4;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin-top: 14px;
+      font-size: 1.16rem;
+    }
+
+    .step p {
+      margin-top: 8px;
+      color: #8793a6;
+      font-size: 0.93rem;
+    }
+
+    .evidence-box {
+      margin-top: 45px;
+
+      padding: 32px;
+
+      border-radius: 18px;
+
+      background: #0c121e;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .evidence-row {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 20px;
+
+      padding: 14px 0;
+
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .evidence-row:last-child {
+      border-bottom: none;
+    }
+
+    .evidence-key {
+      color: #758195;
+    }
+
+    .evidence-value {
+      font-weight: 650;
+    }
+
+    .boundary {
+      margin-top: 24px;
+
+      padding: 18px;
+
+      border-left: 3px solid #5eead4;
+
+      background: rgba(94, 234, 212, 0.045);
+
+      color: #a6b2c1;
+      font-size: 0.92rem;
+    }
+
+    .release {
+      text-align: center;
+
+      padding: 110px 30px;
+
+      border-radius: 24px;
+
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(94, 234, 212, 0.12),
+          transparent 50%
+        ),
+        rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .release p {
+      max-width: 600px;
+      margin: 18px auto 0;
+
+      color: #929daf;
+    }
+
+    .release-state {
+      display: inline-block;
+      margin-top: 28px;
+
+      padding: 10px 16px;
+      border-radius: 999px;
+
+      border: 1px solid rgba(94, 234, 212, 0.22);
+      color: #5eead4;
+
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      margin-top: 90px;
+
+      padding: 36px 0;
+
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+
+      color: #707c8f;
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 850px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 45px;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .evidence-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <nav>
+      <div class="brand">Bladi Moon Labs</div>
+      <div class="nav-note">Independent software studio</div>
+    </nav>
+
+
+    <main>
+
+      <section class="hero">
+
+        <div>
+
+          <div class="badge">
+            <span class="dot"></span>
+            Windows · V1.0.1
+          </div>
+
+          <h1>
+            Your internet acts up.
+            <span class="hero-highlight">Keep the evidence.</span>
+          </h1>
+
+          <p class="hero-copy">
+            Internet Black Box continuously monitors your connection,
+            records connectivity anomalies, and creates timestamped evidence
+            you can review and share with your ISP.
+          </p>
+
+          <div class="actions">
+
+            <a class="button button-primary" href="#release">
+              Internet Black Box
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="https://github.com/bladimoon37-wq/bladi-moon-labs"
+            >
+              Bladi Moon Labs
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="product-card">
+
+          <div class="window-top">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+          </div>
+
+          <div class="monitor-label">
+            Monitoring Status
+          </div>
+
+          <div class="status">
+            Normal
+          </div>
+
+          <div class="stats">
+
+            <div class="stat">
+              <div class="stat-name">Elapsed time</div>
+              <div class="stat-value">04:33:18</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-name">Events</div>
+              <div class="stat-value">2</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-name">Diagnostic cycles</div>
+              <div class="stat-value">27</div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-name">Monitoring gaps</div>
+              <div class="stat-value">0</div>
+            </div>
+
+          </div>
+
+          <div class="event">
+            Evidence preserved when connectivity anomalies are observed.
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <section>
+
+        <div class="section-label">
+          The problem
+        </div>
+
+        <h2>
+          Internet problems have a habit of disappearing
+          when support arrives.
+        </h2>
+
+        <p class="section-description">
+          A quick speed test may look normal even when your connection
+          drops intermittently. Internet Black Box is designed to stay
+          running in the background and preserve what happened over time.
+        </p>
+
+      </section>
+
+
+
+      <section>
+
+        <div class="section-label">
+          How it works
+        </div>
+
+        <h2>
+          Start it. Leave it running. Review the evidence.
+        </h2>
+
+        <div class="steps">
+
+          <div class="step">
+            <div class="step-number">01</div>
+
+            <h3>Start monitoring</h3>
+
+            <p>
+              Run Internet Black Box on your Windows PC and continue
+              using your computer normally.
+            </p>
+          </div>
+
+
+          <div class="step">
+            <div class="step-number">02</div>
+
+            <h3>Connectivity is observed</h3>
+
+            <p>
+              The application records network observations and separates
+              normal periods from detected connectivity anomalies.
+            </p>
+          </div>
+
+
+          <div class="step">
+            <div class="step-number">03</div>
+
+            <h3>Export the evidence</h3>
+
+            <p>
+              Generate a readable report and export an evidence package
+              containing supporting diagnostic data.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <section>
+
+        <div class="section-label">
+          Evidence
+        </div>
+
+        <h2>
+          Built around observable facts.
+        </h2>
+
+        <p class="section-description">
+          Reports focus on when a connectivity anomaly was observed,
+          how long it lasted, what monitoring layers responded,
+          and the diagnostic evidence associated with the event.
+        </p>
+
+
+        <div class="evidence-box">
+
+          <div class="evidence-row">
+            <div class="evidence-key">Observed state</div>
+            <div class="evidence-value">
+              External connectivity anomaly
+            </div>
+          </div>
+
+          <div class="evidence-row">
+            <div class="evidence-key">Start</div>
+            <div class="evidence-value">
+              2026-08-15 05:48:36 UTC
+            </div>
+          </div>
+
+          <div class="evidence-row">
+            <div class="evidence-key">Duration</div>
+            <div class="evidence-value">
+              66.9 seconds
+            </div>
+          </div>
+
+          <div class="evidence-row">
+            <div class="evidence-key">Gateway</div>
+            <div class="evidence-value">
+              Responded
+            </div>
+          </div>
+
+          <div class="evidence-row">
+            <div class="evidence-key">External targets</div>
+            <div class="evidence-value">
+              Multiple failures observed
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="boundary">
+          Internet Black Box records observational connectivity evidence.
+          It does not determine legal responsibility or assign fault to an
+          ISP, router manufacturer, DNS provider, or specific device.
+        </div>
+
+      </section>
+
+
+
+      <section id="release">
+
+        <div class="release">
+
+          <div class="section-label">
+            Internet Black Box V1.0.1
+          </div>
+
+          <h2>
+            Windows connectivity evidence recorder.
+          </h2>
+
+          <p>
+            The first commercial release is currently being prepared.
+            Internet Black Box is designed for Windows users who need
+            a simple way to preserve evidence of intermittent
+            connectivity problems.
+          </p>
+
+          <div class="release-state">
+            Commercial release preparing
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+
+    <footer>
+
+      <div>
+        © 2026 Bladi Moon Labs
+      </div>
+
+      <div>
+        Internet Black Box · Observational evidence only
+      </div>
+
+    </footer>
+
+  </div>
+
+</body>
+</html>
