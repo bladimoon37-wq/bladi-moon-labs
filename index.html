@@ -3,656 +3,254 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta
-    name="description"
-    content="Internet Black Box records connectivity problems and creates timestamped evidence reports you can share with your ISP."
-  />
-
-  <title>Bladi Moon Labs — Internet Black Box</title>
-
+  <meta name="description" content="Internet Black Box records intermittent connectivity problems on Windows and creates evidence reports you can review and share with support." />
+  <meta name="theme-color" content="#f7f8fc" />
+  <title>Internet Black Box — Keep the evidence when your internet drops</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root{
+      --bg:#f7f8fc; --surface:#fff; --ink:#111827; --navy:#17213a; --muted:#687386;
+      --line:#e8ebf3; --blue:#3478f6; --blue2:#5b6cf9; --purple:#8257ef;
+      --soft-blue:#edf4ff; --soft-purple:#f3eeff; --ok:#1fa66a; --shadow:0 24px 70px rgba(32,55,105,.13);
+      --radius:24px;
     }
-
-    html {
-      scroll-behavior: smooth;
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+    a{color:inherit;text-decoration:none}
+    .wrap{width:min(1180px,92vw);margin:auto}
+    .nav-shell{position:sticky;top:0;z-index:30;background:rgba(247,248,252,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(226,230,239,.8)}
+    nav{height:74px;display:flex;align-items:center;gap:28px}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.025em;white-space:nowrap}
+    .brand-mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(145deg,var(--blue),var(--purple));display:grid;place-items:center;box-shadow:0 10px 25px rgba(52,120,246,.24)}
+    .cube{width:16px;height:16px;border:2px solid #fff;transform:rotate(30deg);border-radius:2px}
+    .nav-links{display:flex;gap:26px;margin-left:auto;color:#5e6879;font-size:.93rem;font-weight:650}
+    .nav-links a:hover{color:var(--ink)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;padding:13px 19px;font-weight:780;transition:.2s ease;border:1px solid transparent}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 12px 30px rgba(52,120,246,.25)}
+    .btn-ghost{background:#fff;border-color:var(--line);color:var(--navy)}
+    .nav-cta{padding:10px 15px;font-size:.9rem}
+    .hero{position:relative;overflow:hidden;padding:96px 0 88px}
+    .hero:before,.hero:after{content:"";position:absolute;pointer-events:none;border-radius:50%;filter:blur(2px)}
+    .hero:before{width:720px;height:380px;right:-180px;top:35px;background:radial-gradient(circle,rgba(79,121,255,.20),rgba(125,81,239,.08) 45%,transparent 72%)}
+    .hero:after{width:900px;height:320px;left:-260px;bottom:-160px;background:radial-gradient(ellipse,rgba(111,82,242,.12),rgba(53,126,246,.07) 45%,transparent 72%)}
+    .hero-grid{position:relative;display:grid;grid-template-columns:.92fr 1.08fr;gap:66px;align-items:center;z-index:1}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.82rem;color:#526076;font-weight:750;box-shadow:0 5px 18px rgba(29,45,81,.05)}
+    .eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+    h1{font-size:clamp(3.3rem,6vw,5.65rem);line-height:.96;letter-spacing:-.068em;margin:22px 0 0;color:#111827}
+    .accent{display:block;background:linear-gradient(100deg,var(--blue),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:13px}
+    .hero-copy{font-size:1.12rem;color:var(--muted);max-width:590px;margin:28px 0 0}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:31px}
+    .micro{font-size:.85rem;color:#7a8495;margin-top:13px}
+    .shot-shell{position:relative;padding:13px;background:rgba(255,255,255,.88);border:1px solid rgba(224,229,240,.92);border-radius:28px;box-shadow:var(--shadow);transform:rotate(1.1deg);animation:float 7s ease-in-out infinite}
+    .shot-shell:after{content:"Actual IBB app";position:absolute;right:17px;bottom:-37px;color:#8490a3;font-size:.75rem;font-weight:700;letter-spacing:.02em}
+    .shot-shell img{display:block;width:100%;border-radius:19px}
+    @keyframes float{50%{transform:rotate(.35deg) translateY(-7px)}}
+    section{padding:92px 0}
+    .section-head{max-width:760px;margin:0 auto;text-align:center}
+    .kicker{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);font-weight:850}
+    h2{font-size:clamp(2.2rem,4.7vw,4rem);line-height:1.04;letter-spacing:-.052em;margin:12px 0 0;color:#121a2b}
+    .lead{color:var(--muted);font-size:1.07rem;margin:20px auto 0;max-width:700px}
+    .pain-flow,.steps{display:grid;gap:16px;margin-top:46px}
+    .pain-flow{grid-template-columns:repeat(4,1fr)}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 10px 30px rgba(38,54,92,.055)}
+    .pain-card{padding:26px;min-height:168px;position:relative}
+    .pain-num{font-size:.75rem;color:#9aa4b4;font-weight:800}
+    .pain-card strong{display:block;font-size:1.08rem;margin-top:27px;letter-spacing:-.02em}
+    .pain-card p{color:var(--muted);font-size:.91rem;margin:8px 0 0}
+    .pain-card:not(:last-child):after{content:"→";position:absolute;right:-13px;top:50%;transform:translate(50%,-50%);z-index:3;width:31px;height:31px;border-radius:50%;background:#f7f8fc;border:1px solid var(--line);display:grid;place-items:center;color:var(--blue);font-weight:900}
+    .pain-close{text-align:center;margin:26px auto 0;font-weight:700;color:#424d60}
+    .steps{grid-template-columns:repeat(4,1fr)}
+    .step{padding:27px}
+    .step-icon{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,var(--soft-blue),var(--soft-purple));display:grid;place-items:center;color:var(--blue);font-weight:900}
+    .step small{display:block;margin-top:23px;color:#8993a4;font-weight:800;letter-spacing:.08em}
+    .step h3{margin:8px 0 0;font-size:1.17rem;letter-spacing:-.025em}
+    .step p{margin:8px 0 0;color:var(--muted);font-size:.91rem}
+    .product-moment{background:linear-gradient(180deg,#f0f5ff,#f7f8fc)}
+    .big-shot{max-width:1030px;margin:46px auto 0;padding:14px;border-radius:30px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+    .big-shot img{display:block;width:100%;border-radius:21px}
+    .checks{display:flex;justify-content:center;gap:13px;flex-wrap:wrap;margin-top:28px}
+    .check{background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:.87rem;color:#4f5a6c;font-weight:650}
+    .check b{color:var(--ok);margin-right:6px}
+    .evidence-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:42px;align-items:center;margin-top:50px}
+    .report-preview{background:#fff;border:1px solid var(--line);border-radius:27px;padding:28px;box-shadow:0 16px 50px rgba(40,57,97,.09)}
+    .report-top{display:flex;justify-content:space-between;gap:20px;align-items:start;border-bottom:1px solid var(--line);padding-bottom:18px}
+    .report-brand{font-size:.79rem;color:#7e899b;font-weight:800;letter-spacing:.09em}
+    .report-title{font-size:1.45rem;font-weight:850;letter-spacing:-.035em;margin-top:5px}
+    .quality{padding:7px 10px;background:#eef8f3;color:#14865a;border-radius:999px;font-size:.75rem;font-weight:850}
+    .report-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+    .metric{padding:13px;background:#f8f9fc;border-radius:13px}
+    .metric span{font-size:.72rem;color:#8a94a5}.metric strong{display:block;margin-top:2px}
+    .incident{margin-top:15px;padding:17px;border:1px solid #e8eaf1;border-radius:15px}
+    .incident small{color:#8a94a5;font-weight:750}.incident strong{display:block;margin-top:4px}
+    .incident p{margin:7px 0 0;color:#697487;font-size:.87rem}
+    .evidence-list h3{font-size:1rem;color:#7a8497;letter-spacing:.08em}
+    .evidence-list ul{list-style:none;padding:0;margin:20px 0 0}
+    .evidence-list li{padding:12px 0;border-bottom:1px solid var(--line);font-weight:680}
+    .evidence-list li:before{content:"✓";color:var(--blue);font-weight:900;margin-right:10px}
+    .complexity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:43px}
+    .complexity-card{padding:28px}.complexity-card h3{margin:0;font-size:1.08rem}
+    .complexity-card p{color:var(--muted);font-size:.92rem;margin:9px 0 0}
+    .formula{text-align:center;font-weight:900;font-size:1.2rem;color:var(--navy);margin-top:30px}
+    .trust{background:linear-gradient(135deg,#edf5ff 0%,#f4efff 100%);border:1px solid #e0e8fb;border-radius:32px;padding:52px;margin-top:15px}
+    .trust-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:center}
+    .trust h2{text-align:left;font-size:clamp(2.1rem,4vw,3.25rem)}
+    .privacy-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+    .privacy-item{background:rgba(255,255,255,.76);border:1px solid rgba(255,255,255,.85);padding:14px 15px;border-radius:14px;font-size:.9rem;font-weight:700;color:#455166}
+    .privacy-item:before{content:"✓";color:var(--blue);margin-right:8px;font-weight:900}
+    .integrity-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:40px auto 0;max-width:850px}
+    .integrity-step{text-align:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 12px;font-size:.82rem;letter-spacing:.08em;font-weight:850;color:#526078}
+    .faq{max-width:850px;margin:42px auto 0}
+    details{background:#fff;border:1px solid var(--line);border-radius:17px;padding:0 20px;margin:10px 0}
+    summary{cursor:pointer;list-style:none;padding:19px 0;font-weight:780}
+    summary::-webkit-details-marker{display:none}
+    summary:after{content:"+";float:right;color:var(--blue);font-size:1.25rem}
+    details[open] summary:after{content:"–"}
+    details p{color:var(--muted);margin:-2px 0 19px;font-size:.94rem}
+    .final{padding-top:48px}
+    .purchase{position:relative;overflow:hidden;text-align:center;border-radius:34px;padding:74px 24px;background:linear-gradient(135deg,#397cf7 0%,#655ff3 48%,#8359e8 100%);color:white;box-shadow:0 28px 80px rgba(78,92,225,.24)}
+    .purchase:before{content:"";position:absolute;width:520px;height:220px;border-radius:50%;background:rgba(255,255,255,.12);filter:blur(35px);right:-160px;top:-80px}
+    .purchase h2{color:white;position:relative}.purchase p{position:relative;color:rgba(255,255,255,.82);max-width:620px;margin:18px auto 0}
+    .price{position:relative;font-size:3rem;font-weight:900;letter-spacing:-.05em;margin:25px 0 3px}
+    .one-time{position:relative;font-size:.88rem;color:rgba(255,255,255,.82)}
+    .purchase .btn{position:relative;margin-top:27px;background:#fff;color:#27488f;padding:14px 22px}
+    footer{padding:54px 0 35px;color:#7f8999;font-size:.86rem}
+    .footer-grid{display:flex;justify-content:space-between;gap:25px;align-items:center;border-top:1px solid var(--line);padding-top:26px}
+    .footer-links{display:flex;gap:18px;flex-wrap:wrap}
+    .fade{opacity:0;transform:translateY(13px);transition:opacity .6s ease,transform .6s ease}
+    .fade.visible{opacity:1;transform:none}
+    @media(max-width:980px){
+      .nav-links{display:none}.hero-grid,.evidence-grid,.trust-grid{grid-template-columns:1fr}.hero{padding-top:65px}
+      .shot-shell{max-width:780px;margin:auto;transform:none}.pain-flow,.steps{grid-template-columns:repeat(2,1fr)}
+      .pain-card:nth-child(2):after{display:none}.complexity-grid{grid-template-columns:1fr}
     }
-
-    body {
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-      background: #070b14;
-      color: #f5f7fb;
-      line-height: 1.6;
+    @media(max-width:650px){
+      .wrap{width:min(94vw,560px)}nav{height:66px}.nav-cta{font-size:.8rem;padding:9px 11px}.brand{font-size:.9rem}.brand-mark{width:30px;height:30px}
+      .hero{padding:52px 0 65px}h1{font-size:3.45rem}.hero-copy{font-size:1rem}.hero-actions .btn{width:100%}
+      section{padding:67px 0}.pain-flow,.steps,.report-metrics,.privacy-grid,.integrity-flow{grid-template-columns:1fr}
+      .pain-card:not(:last-child):after{display:none}.big-shot{padding:7px;border-radius:20px;overflow:hidden}.big-shot img{width:150%;max-width:none;transform:translateX(-16%)}
+      .trust{padding:34px 20px}.footer-grid{flex-direction:column;align-items:flex-start}.purchase{padding:58px 18px}
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(1120px, 90%);
-      margin: 0 auto;
-    }
-
-    nav {
-      height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    }
-
-    .brand {
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      font-size: 1.1rem;
-    }
-
-    .nav-note {
-      color: #8f9bad;
-      font-size: 0.9rem;
-    }
-
-    .hero {
-      min-height: 690px;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 70px;
-      align-items: center;
-      padding: 90px 0;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(94, 234, 212, 0.08);
-      border: 1px solid rgba(94, 234, 212, 0.22);
-      color: #79f3df;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 24px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #5eead4;
-      box-shadow: 0 0 14px #5eead4;
-    }
-
-    h1 {
-      font-size: clamp(3rem, 6vw, 5.4rem);
-      line-height: 0.98;
-      letter-spacing: -0.06em;
-      max-width: 780px;
-    }
-
-    .hero-highlight {
-      color: #5eead4;
-    }
-
-    .hero-copy {
-      margin-top: 28px;
-      color: #aab4c4;
-      font-size: 1.16rem;
-      max-width: 650px;
-    }
-
-    .actions {
-      margin-top: 36px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .button {
-      padding: 13px 20px;
-      border-radius: 10px;
-      font-weight: 750;
-      font-size: 0.96rem;
-      transition: 0.2s ease;
-    }
-
-    .button-primary {
-      background: #f5f7fb;
-      color: #070b14;
-    }
-
-    .button-primary:hover {
-      transform: translateY(-2px);
-      background: #ffffff;
-    }
-
-    .button-secondary {
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #cbd3df;
-    }
-
-    .button-secondary:hover {
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .product-card {
-      padding: 26px;
-      border-radius: 22px;
-      background:
-        linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.055),
-          rgba(255, 255, 255, 0.02)
-        );
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
-    }
-
-    .window-top {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 28px;
-    }
-
-    .circle {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #3a4351;
-    }
-
-    .monitor-label {
-      color: #7f8b9d;
-      text-transform: uppercase;
-      font-size: 0.72rem;
-      letter-spacing: 0.13em;
-      font-weight: 800;
-    }
-
-    .status {
-      margin-top: 6px;
-      font-size: 2.25rem;
-      font-weight: 850;
-      letter-spacing: -0.04em;
-      color: #5eead4;
-    }
-
-    .stats {
-      margin-top: 26px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .stat {
-      padding: 15px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .stat-name {
-      color: #758195;
-      font-size: 0.78rem;
-    }
-
-    .stat-value {
-      margin-top: 3px;
-      font-size: 1.15rem;
-      font-weight: 750;
-    }
-
-    .event {
-      margin-top: 18px;
-      padding: 15px;
-      border-radius: 12px;
-      background: rgba(251, 191, 36, 0.07);
-      border: 1px solid rgba(251, 191, 36, 0.15);
-      color: #e7c773;
-      font-size: 0.9rem;
-    }
-
-    section {
-      padding: 100px 0;
-    }
-
-    .section-label {
-      color: #5eead4;
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    h2 {
-      margin-top: 10px;
-      font-size: clamp(2rem, 4vw, 3.3rem);
-      letter-spacing: -0.045em;
-      line-height: 1.08;
-    }
-
-    .section-description {
-      margin-top: 18px;
-      color: #929daf;
-      max-width: 720px;
-      font-size: 1.06rem;
-    }
-
-    .steps {
-      margin-top: 48px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .step {
-      padding: 26px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.075);
-    }
-
-    .step-number {
-      color: #5eead4;
-      font-size: 0.8rem;
-      font-weight: 800;
-    }
-
-    .step h3 {
-      margin-top: 14px;
-      font-size: 1.16rem;
-    }
-
-    .step p {
-      margin-top: 8px;
-      color: #8793a6;
-      font-size: 0.93rem;
-    }
-
-    .evidence-box {
-      margin-top: 45px;
-      padding: 32px;
-      border-radius: 18px;
-      background: #0c121e;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .evidence-row {
-      display: grid;
-      grid-template-columns: 190px 1fr;
-      gap: 20px;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .evidence-row:last-child {
-      border-bottom: none;
-    }
-
-    .evidence-key {
-      color: #758195;
-    }
-
-    .evidence-value {
-      font-weight: 650;
-    }
-
-    .boundary {
-      margin-top: 24px;
-      padding: 18px;
-      border-left: 3px solid #5eead4;
-      background: rgba(94, 234, 212, 0.045);
-      color: #a6b2c1;
-      font-size: 0.92rem;
-    }
-
-    .release {
-      text-align: center;
-      padding: 110px 30px;
-      border-radius: 24px;
-      background:
-        radial-gradient(
-          circle at top,
-          rgba(94, 234, 212, 0.12),
-          transparent 50%
-        ),
-        rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .release p {
-      max-width: 600px;
-      margin: 18px auto 0;
-      color: #929daf;
-    }
-
-    .release-state {
-      display: inline-block;
-      margin-top: 28px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(94, 234, 212, 0.22);
-      color: #5eead4;
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    footer {
-      margin-top: 90px;
-      padding: 36px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      color: #707c8f;
-      font-size: 0.86rem;
-    }
-
-    @media (max-width: 850px) {
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 45px;
-      }
-
-      .steps {
-        grid-template-columns: 1fr;
-      }
-
-      .evidence-row {
-        grid-template-columns: 1fr;
-        gap: 5px;
-      }
-
-      footer {
-        flex-direction: column;
-      }
-    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}.fade{opacity:1;transform:none}}
   </style>
 </head>
-
 <body>
-
-  <div class="container">
-
-    <nav>
-      <div class="brand">Bladi Moon Labs</div>
-      <div class="nav-note">Independent software studio</div>
+  <header class="nav-shell">
+    <nav class="wrap" aria-label="Primary navigation">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><span class="cube"></span></span>Internet Black Box</a>
+      <div class="nav-links">
+        <a href="#how">How It Works</a><a href="#evidence">Evidence</a><a href="#privacy">Privacy</a><a href="#faq">FAQ</a>
+      </div>
+      <a class="btn btn-primary nav-cta" href="https://bladi-moon-labs.lemonsqueezy.com/checkout/buy/8b5fcbf4-2ccb-4808-a699-0558b804af4f">Get IBB — $9.99</a>
     </nav>
-
-    <main>
-
-      <section class="hero">
-
+  </header>
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
         <div>
-
-          <div class="badge">
-            <span class="dot"></span>
-            Windows · V1.0.1
+          <div class="eyebrow"><span class="eyebrow-dot"></span>Windows 10/11 · V1.0.1</div>
+          <h1>Your internet keeps dropping?<span class="accent">Don't lose the evidence next time.</span></h1>
+          <p class="hero-copy">Internet Black Box quietly monitors your Windows PC and records connectivity problems while they happen — so you have something to review when the problem disappears again.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://bladi-moon-labs.lemonsqueezy.com/checkout/buy/8b5fcbf4-2ccb-4808-a699-0558b804af4f">Get Internet Black Box — $9.99</a>
+            <a class="btn btn-ghost" href="#evidence">See what the evidence looks like</a>
           </div>
-
-          <h1>
-            Your internet acts up.
-            <span class="hero-highlight">Keep the evidence.</span>
-          </h1>
-
-          <p class="hero-copy">
-            Internet Black Box continuously monitors your connection,
-            records connectivity anomalies, and creates timestamped evidence
-            you can review and share with your ISP.
-          </p>
-
-          <div class="actions">
-
-            <a
-              class="button button-primary"
-              href="https://bladi-moon-labs.lemonsqueezy.com/checkout/buy/8b5fcbf4-2ccb-4808-a699-0558b804af4f"
-            >
-              Buy Internet Black Box — $9.99
-            </a>
-
-            <a
-              class="button button-secondary"
-              href="https://github.com/bladimoon37-wq/bladi-moon-labs"
-            >
-              Bladi Moon Labs
-            </a>
-
-          </div>
-
+          <div class="micro">Windows 10/11 · One-time purchase · No subscription</div>
         </div>
-
-        <div class="product-card">
-
-          <div class="window-top">
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-          </div>
-
-          <div class="monitor-label">
-            Monitoring Status
-          </div>
-
-          <div class="status">
-            Normal
-          </div>
-
-          <div class="stats">
-
-            <div class="stat">
-              <div class="stat-name">Elapsed time</div>
-              <div class="stat-value">04:33:18</div>
-            </div>
-
-            <div class="stat">
-              <div class="stat-name">Events</div>
-              <div class="stat-value">2</div>
-            </div>
-
-            <div class="stat">
-              <div class="stat-name">Diagnostic cycles</div>
-              <div class="stat-value">27</div>
-            </div>
-
-            <div class="stat">
-              <div class="stat-name">Monitoring gaps</div>
-              <div class="stat-value">0</div>
-            </div>
-
-          </div>
-
-          <div class="event">
-            Evidence preserved when connectivity anomalies are observed.
-          </div>
-
+        <div class="shot-shell"><img src="assets/ibb-evidence-ready.png" alt="Actual Internet Black Box Evidence report ready screen" /></div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        <div class="section-head fade"><div class="kicker">The problem</div><h2>Does this sound familiar?</h2><p class="lead">Intermittent problems are easy to feel and surprisingly hard to explain after they disappear.</p></div>
+        <div class="pain-flow">
+          <div class="card pain-card fade"><div class="pain-num">01</div><strong>Internet drops randomly</strong><p>The problem shows up when it wants to.</p></div>
+          <div class="card pain-card fade"><div class="pain-num">02</div><strong>You restart everything</strong><p>Wi-Fi, router, browser — maybe all of it.</p></div>
+          <div class="card pain-card fade"><div class="pain-num">03</div><strong>Everything looks normal later</strong><p>By the time you check, the connection is back.</p></div>
+          <div class="card pain-card fade"><div class="pain-num">04</div><strong>The problem happens again</strong><p>And now you have to explain what vanished.</p></div>
         </div>
-
-      </section>
-
-      <section>
-
-        <div class="section-label">
-          The problem
-        </div>
-
-        <h2>
-          Internet problems have a habit of disappearing
-          when support arrives.
-        </h2>
-
-        <p class="section-description">
-          A quick speed test may look normal even when your connection
-          drops intermittently. Internet Black Box is designed to stay
-          running in the background and preserve what happened over time.
-        </p>
-
-      </section>
-
-      <section>
-
-        <div class="section-label">
-          How it works
-        </div>
-
-        <h2>
-          Start it. Leave it running. Review the evidence.
-        </h2>
-
+        <div class="pain-close fade">IBB keeps a record while the problem is happening.</div>
+      </div>
+    </section>
+    <section id="how">
+      <div class="wrap">
+        <div class="section-head fade"><div class="kicker">How it works</div><h2>Start it. Then forget about it.</h2><p class="lead">No dashboard babysitting. Leave IBB running and come back when there is something worth reviewing.</p></div>
         <div class="steps">
-
-          <div class="step">
-            <div class="step-number">01</div>
-            <h3>Start monitoring</h3>
-            <p>
-              Run Internet Black Box on your Windows PC and continue
-              using your computer normally.
-            </p>
-          </div>
-
-          <div class="step">
-            <div class="step-number">02</div>
-            <h3>Connectivity is observed</h3>
-            <p>
-              The application records network observations and separates
-              normal periods from detected connectivity anomalies.
-            </p>
-          </div>
-
-          <div class="step">
-            <div class="step-number">03</div>
-            <h3>Export the evidence</h3>
-            <p>
-              Generate a readable report and export an evidence package
-              containing supporting diagnostic data.
-            </p>
-          </div>
-
+          <div class="card step fade"><div class="step-icon">▶</div><small>01 — START</small><h3>Start recording</h3><p>Run Internet Black Box before the next problem happens.</p></div>
+          <div class="card step fade"><div class="step-icon">◌</div><small>02 — FORGET</small><h3>Use your PC normally</h3><p>No dashboard watching required.</p></div>
+          <div class="card step fade"><div class="step-icon">●</div><small>03 — CAPTURE</small><h3>IBB catches the problem</h3><p>Connectivity observations are recorded with timestamps.</p></div>
+          <div class="card step fade"><div class="step-icon">✓</div><small>04 — REPORT</small><h3>Evidence ready</h3><p>Review what happened after the connection recovers.</p></div>
         </div>
-
-      </section>
-
-      <section>
-
-        <div class="section-label">
-          Evidence
-        </div>
-
-        <h2>
-          Built around observable facts.
-        </h2>
-
-        <p class="section-description">
-          Reports focus on when a connectivity anomaly was observed,
-          how long it lasted, what monitoring layers responded,
-          and the diagnostic evidence associated with the event.
-        </p>
-
-        <div class="evidence-box">
-
-          <div class="evidence-row">
-            <div class="evidence-key">Observed state</div>
-            <div class="evidence-value">
-              External connectivity anomaly
-            </div>
-          </div>
-
-          <div class="evidence-row">
-            <div class="evidence-key">Start</div>
-            <div class="evidence-value">
-              2026-08-15 05:48:36 UTC
-            </div>
-          </div>
-
-          <div class="evidence-row">
-            <div class="evidence-key">Duration</div>
-            <div class="evidence-value">
-              66.9 seconds
-            </div>
-          </div>
-
-          <div class="evidence-row">
-            <div class="evidence-key">Gateway</div>
-            <div class="evidence-value">
-              Responded
-            </div>
-          </div>
-
-          <div class="evidence-row">
-            <div class="evidence-key">External targets</div>
-            <div class="evidence-value">
-              Multiple failures observed
-            </div>
-          </div>
-
-        </div>
-
-        <div class="boundary">
-          Internet Black Box records observational connectivity evidence.
-          It does not determine legal responsibility or assign fault to an
-          ISP, router manufacturer, DNS provider, or specific device.
-        </div>
-
-      </section>
-
-      <section id="release">
-
-        <div class="release">
-
-          <div class="section-label">
-            Internet Black Box V1.0.1
-          </div>
-
-          <h2>
-            Windows connectivity evidence recorder.
-          </h2>
-
-          <p>
-            Internet Black Box V1.0.1 is available for Windows.
-            Purchase once for $9.99 and download the release package
-            immediately after checkout.
-          </p>
-
-          <div class="actions" style="justify-content:center;">
-            <a
-              class="button button-primary"
-              href="https://bladi-moon-labs.lemonsqueezy.com/checkout/buy/8b5fcbf4-2ccb-4808-a699-0558b804af4f"
-            >
-              Buy for $9.99
-            </a>
-          </div>
-
-        </div>
-
-      </section>
-
-    </main>
-
-    <footer>
-
-      <div>
-        © 2026 Bladi Moon Labs
       </div>
-
-      <div>
-        Internet Black Box · Observational evidence only
+    </section>
+    <section class="product-moment">
+      <div class="wrap">
+        <div class="section-head fade"><div class="kicker">Product moment</div><h2>Problem captured. Evidence ready.</h2><p class="lead">You don't need to watch the connection fail. Internet Black Box keeps the record for you.</p></div>
+        <div class="big-shot fade"><img src="assets/ibb-evidence-ready.png" alt="Actual Internet Black Box application showing Evidence report ready" /></div>
+        <div class="checks fade"><span class="check"><b>✓</b>Problem detected</span><span class="check"><b>✓</b>Timestamp recorded</span><span class="check"><b>✓</b>Connectivity state captured</span><span class="check"><b>✓</b>Evidence saved</span></div>
       </div>
-
-    </footer>
-
-  </div>
-
+    </section>
+    <section id="evidence">
+      <div class="wrap">
+        <div class="section-head fade"><div class="kicker">Evidence report</div><h2>The product isn't another dashboard.<br>It's the evidence.</h2><p class="lead">IBB organizes observable connectivity conditions into a report designed to be reviewed later — including timestamps, incident duration and supporting technical observations.</p></div>
+        <div class="evidence-grid">
+          <div class="report-preview fade" aria-label="Sample evidence report preview">
+            <div class="report-top"><div><div class="report-brand">INTERNET BLACK BOX</div><div class="report-title">Internet Connection Evidence Report</div></div><div class="quality">OBSERVATIONAL</div></div>
+            <div class="report-metrics"><div class="metric"><span>Problem</span><strong>1 recorded</strong></div><div class="metric"><span>Affected time</span><strong>5.1 sec</strong></div><div class="metric"><span>State</span><strong>Local anomaly</strong></div></div>
+            <div class="incident"><small>RECORDED EVENT</small><strong>Local network anomaly observed</strong><p>Local gateway became unreachable during the event and responded again when the event closed. The report avoids making an unsupported ISP-fault claim.</p></div>
+            <div class="hero-actions" style="margin-top:18px"><a class="btn btn-ghost" href="sample-evidence-report.html">View sample evidence report</a></div>
+          </div>
+          <div class="evidence-list fade">
+            <h3>WHAT THE REPORT CAN SHOW</h3><ul><li>When the problem happened</li><li>How long it lasted</li><li>Local connectivity observations</li><li>Gateway observations</li><li>External connectivity observations</li><li>Recovery</li><li>Technical evidence</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap">
+        <div class="section-head fade"><div class="kicker">Less complexity</div><h2>You shouldn't need to become a network expert.</h2></div>
+        <div class="complexity-grid"><div class="card complexity-card fade"><h3>No log hunting</h3><p>Don't dig through thousands of Windows events after every disconnect.</p></div><div class="card complexity-card fade"><h3>No dashboard watching</h3><p>You shouldn't have to stare at charts waiting for the problem.</p></div><div class="card complexity-card fade"><h3>No networking degree required</h3><p>IBB turns connectivity observations into a report designed to be reviewed later.</p></div></div>
+        <div class="formula fade">Start → Forget → Evidence</div>
+      </div>
+    </section>
+    <section id="privacy">
+      <div class="wrap"><div class="trust fade"><div class="trust-grid">
+        <div><div class="kicker">Privacy & trust</div><h2>A black box for your connection — not your private life.</h2><p class="lead" style="text-align:left;margin-left:0">The product is designed around connectivity observations, not personal content.</p></div>
+        <div class="privacy-grid"><div class="privacy-item">No camera recording</div><div class="privacy-item">No microphone recording</div><div class="privacy-item">No screen recording</div><div class="privacy-item">No browsing-history recording</div><div class="privacy-item">Connectivity observations only</div><div class="privacy-item">Runs locally on this PC</div></div>
+      </div></div></div>
+    </section>
+    <section id="technical">
+      <div class="wrap">
+        <div class="section-head fade"><div class="kicker">Technical integrity</div><h2>Evidence first. No unsupported blame.</h2><p class="lead">Internet Black Box records connectivity observations. It does not automatically prove that your ISP, router, Wi-Fi adapter, DNS provider, or another party caused an incident.</p></div>
+        <div class="integrity-flow fade"><div class="integrity-step">OBSERVED</div><div class="integrity-step">RECORDED</div><div class="integrity-step">ORGANIZED</div><div class="integrity-step">REPORTED</div></div>
+      </div>
+    </section>
+    <section id="faq">
+      <div class="wrap">
+        <div class="section-head fade"><div class="kicker">FAQ</div><h2>Simple answers before you buy.</h2></div>
+        <div class="faq">
+          <details class="fade"><summary>What does Internet Black Box record?</summary><p>Connectivity observations such as local gateway reachability, external connectivity checks, DNS/TCP diagnostic observations, timestamps and detected incident states.</p></details>
+          <details class="fade"><summary>Does it record my browsing activity?</summary><p>No. IBB is not designed to record browsing history, screen contents, camera or microphone data.</p></details>
+          <details class="fade"><summary>Does it need to stay open?</summary><p>Start recording and leave IBB running while you use the PC normally. You do not need to watch the dashboard.</p></details>
+          <details class="fade"><summary>What happens when my internet disconnects?</summary><p>IBB continues preserving available connectivity observations and organizes detected incidents for later review when the connection recovers.</p></details>
+          <details class="fade"><summary>Can I send the report to my ISP?</summary><p>Yes. The report is designed to be readable and shareable with technical support. Whether a provider accepts it for a particular dispute or process is up to that provider.</p></details>
+          <details class="fade"><summary>Does IBB prove my ISP caused the problem?</summary><p>No. It records observations and evidence quality. It deliberately avoids claiming legal responsibility or unsupported ISP fault.</p></details>
+          <details class="fade"><summary>Which Windows versions are supported?</summary><p>Internet Black Box V1.0.1 is offered for Windows 10 and Windows 11 PCs.</p></details>
+          <details class="fade"><summary>Is this a subscription?</summary><p>No. The current V1.0.1 offer is a $9.99 one-time purchase.</p></details>
+          <details class="fade"><summary>Where does my data go?</summary><p>IBB runs locally on your PC and stores its evidence data locally. Optional active performance tests contact a public test service when you explicitly run them.</p></details>
+        </div>
+      </div>
+    </section>
+    <section id="release" class="final"><div class="wrap"><div class="purchase fade">
+      <div class="kicker" style="color:rgba(255,255,255,.75)">Internet Black Box V1.0.1</div><h2>Ready for the next outage?</h2><p>Don't let the next problem disappear without a record. Start IBB, use your PC normally, and review the evidence afterward.</p><div class="price">$9.99</div><div class="one-time">One-time purchase</div><a class="btn" href="https://bladi-moon-labs.lemonsqueezy.com/checkout/buy/8b5fcbf4-2ccb-4808-a699-0558b804af4f">Get Internet Black Box</a><div class="micro" style="position:relative;color:rgba(255,255,255,.76)">Windows 10/11 · No subscription</div>
+    </div></div></section>
+  </main>
+  <footer><div class="wrap footer-grid"><div><strong>Internet Black Box</strong> by Bladi Moon Labs<br>© 2026 Bladi Moon Labs</div><div class="footer-links"><a href="#privacy">Privacy</a><a href="#technical">Technical Information</a><a href="#faq">FAQ</a><a href="https://github.com/bladimoon37-wq/bladi-moon-labs">GitHub</a></div></div></footer>
+  <script>
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    }), { threshold: 0.12 });
+    document.querySelectorAll('.fade').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
