@@ -1,0 +1,16 @@
+IBB DISCOVERY V1
+
+Changes:
+- Main hero/product identity strengthened
+- Gumroad is the single checkout target
+- Added /internet-keeps-disconnecting/
+- Added /prove-internet-outages-to-isp/
+- Added /evidence-example/
+- Added internal discovery links
+- Added canonical/meta/OG metadata
+- Added SoftwareApplication structured data on home page
+- Added robots.txt and sitemap.xml
+- Existing design, demo video, evidence asset, and product scope preserved
+
+Deploy: upload/commit the CONTENTS of this folder to the repository main branch.
+Then verify all URLs and submit sitemap.xml in Google Search Console.
