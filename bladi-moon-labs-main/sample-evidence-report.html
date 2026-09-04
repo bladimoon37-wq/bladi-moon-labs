@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample Evidence Report — Internet Black Box</title><meta name="description" content="A sample Internet Black Box observational connectivity evidence report."><link rel="canonical" href="https://bladimoon37-wq.github.io/bladi-moon-labs/sample-evidence-report.html">
+<style>
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f7f8fc;color:#17213a;margin:0;line-height:1.55}
+.wrap{width:min(880px,92vw);margin:50px auto}.top{display:flex;justify-content:space-between;gap:20px;align-items:center}
+a{color:#3478f6;text-decoration:none}.card{background:#fff;border:1px solid #e7eaf1;border-radius:22px;padding:30px;margin-top:24px}
+h1{font-size:2.3rem;letter-spacing:-.04em;margin:10px 0}.muted{color:#6c7789}.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff2df;color:#986215;font-weight:800;font-size:.78rem}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}.metric{background:#f7f8fc;border-radius:13px;padding:14px}.metric span{font-size:.75rem;color:#8892a3}.metric strong{display:block}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:.9rem}th,td{padding:10px;border-bottom:1px solid #e9ebf1;text-align:left}ul{padding-left:20px}
+.note{padding:16px;border-radius:13px;background:#eff5ff;color:#465777;margin-top:18px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.top{display:block}table{font-size:.78rem}}
+</style>
+</head>
+<body><div class="wrap">
+<div class="top"><div><strong>Internet Black Box</strong><div class="muted">Connectivity evidence recorder</div></div><a href="index.html#evidence">← Back to product page</a></div>
+<div class="card">
+<div class="muted">SAMPLE · OBSERVATIONAL EVIDENCE</div>
+<h1>1 connectivity problem recorded</h1>
+<p class="muted">This sample is based on a real IBB gateway-fault QA session recorded on Aug 23, 2026.</p>
+<div class="grid"><div class="metric"><span>Event</span><strong>LOCAL_NETWORK_ANOMALY</strong></div><div class="metric"><span>Affected time</span><strong>5.102 sec</strong></div><div class="metric"><span>Assessment</span><strong>Local troubleshooting first</strong></div></div>
+<span class="badge">MEDIUM CONFIDENCE</span>
+<h2>Local network anomaly observed</h2>
+<p>The local gateway became unreachable during the event. Because the failure includes the path between the PC and its gateway, this is not strong evidence of an upstream ISP-side fault.</p>
+<h3>Evidence for this assessment</h3>
+<ul><li>Gateway unreachable during the opening diagnostic cycle.</li><li>External targets were also unavailable while the gateway was unreachable.</li><li>The next diagnostic cycle showed gateway and external connectivity recovered.</li></ul>
+<h3>Technical event trace</h3>
+<table><thead><tr><th>Phase</th><th>Observed pattern</th><th>Gateway</th><th>External checks</th></tr></thead><tbody>
+<tr><td>OPEN</td><td>GATEWAY_UNREACHABLE</td><td>Unreachable</td><td>0/2</td></tr>
+<tr><td>CLOSE</td><td>NORMAL</td><td>Reachable</td><td>2/2</td></tr>
+</tbody></table>
+<div class="note"><strong>Evidence boundary:</strong> Internet Black Box records observable connectivity conditions. This report does not establish legal liability or prove that an ISP, router, DNS provider, device, or another party caused the event.</div>
+</div></div></body></html>
