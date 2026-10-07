@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invoice Chaser V0 Tests</title>
+<style>
+body{font-family:system-ui;max-width:850px;margin:40px auto;padding:20px;color:#17202a}
+.ok{color:#08752b}.bad{color:#a01818}.r{padding:7px;border-bottom:1px solid #ddd}
+#s{font-size:24px;font-weight:800}
+</style>
+</head>
+<body>
+<h1>FREE INVOICE CHASER V0 — Tests</h1>
+<p id="s">Running…</p>
+<div id="r"></div>
+<script src="assets/engine.js"></script>
+<script>
+"use strict";
+const D="2026-10-03", T=[];
+function b(o={}){return Object.assign({amount:"100",dueDate:D,contacted:"no",lastContactDate:"",promised:"",promisedDate:""},o)}
+function t(n,f){T.push([n,f])}
+function eq(a,b){if(a!==b)throw Error("expected "+b+", got "+a)}
+t("01 not due",()=>eq(InvoiceChaser.decide(b({dueDate:"2026-10-04"}),D).status,"NOT_DUE"));
+t("02 due today",()=>eq(InvoiceChaser.decide(b(),D).status,"DUE"));
+t("03 first overdue",()=>eq(InvoiceChaser.decide(b({dueDate:"2026-10-01"}),D).status,"DUE"));
+t("04 contacted overdue",()=>eq(InvoiceChaser.decide(b({dueDate:"2026-09-20",contacted:"yes",lastContactDate:"2026-10-01",promised:"no"}),D).status,"FOLLOW_UP"));
+t("05 promise future",()=>eq(InvoiceChaser.decide(b({contacted:"yes",lastContactDate:"2026-10-01",promised:"yes",promisedDate:"2026-10-05"}),D).status,"PROMISE_PENDING"));
+t("06 promise today",()=>eq(InvoiceChaser.decide(b({contacted:"yes",lastContactDate:"2026-10-01",promised:"yes",promisedDate:D}),D).status,"PROMISE_PENDING"));
+t("07 promise passed",()=>eq(InvoiceChaser.decide(b({contacted:"yes",lastContactDate:"2026-09-28",promised:"yes",promisedDate:"2026-10-02"}),D).status,"PROMISE_BROKEN"));
+t("08 invalid date",()=>{if(!InvoiceChaser.decide(b({dueDate:"2026-02-31"}),D).errors.length)throw Error("accepted")});
+t("09 missing amount",()=>{if(!InvoiceChaser.decide(b({amount:""}),D).errors.length)throw Error("accepted")});
+t("10 missing conditional",()=>{if(!InvoiceChaser.decide(b({contacted:"yes"}),D).errors.length)throw Error("accepted")});
+t("11 injection stripped",()=>{const sample="<"+"script>alert(1)<"+"/script>";if(InvoiceChaser.cleanText(sample,120).includes("<"))throw Error("not stripped")});
+t("12 long input capped",()=>eq(InvoiceChaser.cleanText("a".repeat(500),120).length,120));
+t("13 negative amount",()=>{if(!InvoiceChaser.decide(b({amount:"-1"}),D).errors.length)throw Error("accepted")});
+t("14 future contact",()=>{if(!InvoiceChaser.decide(b({contacted:"yes",lastContactDate:"2026-10-04",promised:"no"}),D).errors.length)throw Error("accepted")});
+t("15 promise before contact",()=>{if(!InvoiceChaser.decide(b({contacted:"yes",lastContactDate:"2026-10-02",promised:"yes",promisedDate:"2026-10-01"}),D).errors.length)throw Error("accepted")});
+t("16 escalation",()=>eq(InvoiceChaser.decide(b({dueDate:"2026-08-01",contacted:"yes",lastContactDate:"2026-09-20",promised:"no"}),D).status,"ESCALATION_REVIEW"));
+let P=0,F=0,R=document.getElementById("r");
+for(const [n,f] of T){let x=document.createElement("div");x.className="r";try{f();P++;x.classList.add("ok");x.textContent="PASS — "+n}catch(e){F++;x.classList.add("bad");x.textContent="FAIL — "+n+" — "+e.message}R.appendChild(x)}
+let s=document.getElementById("s");s.textContent=P+" PASS / "+F+" FAIL";s.className=F?"bad":"ok";
+</script>
+</body>
+</html>
